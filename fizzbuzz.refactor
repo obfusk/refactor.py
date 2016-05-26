@@ -1,5 +1,3 @@
-#!/usr/bin/env refactor
-
 : mult? ( m n -- ? ) mod 0 = ;
 : append-when-mult ( str1 n m str2 -- str3 n )
   pick [ [ mult? ] dip swap [ append ] [ drop ] if ] dip ;

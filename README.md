@@ -22,9 +22,12 @@ Factor)
 
 ## TODO
 
-* parse syntax!
-* implement basic semantics (for fizbuzz example)!
-* standard library (prelude)?
+* implement rules and most important primitives (to be able to run the
+  fizbuzz example)!
+* fix TODOs!
+* examples, docs & tests!
+* check stack effects!
+* more primitives & standard library (prelude)?
 * ...
 
 ## License
