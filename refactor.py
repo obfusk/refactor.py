@@ -25,8 +25,16 @@ Examples
 
 # ... TODO ...
 
+>>> R.evaluate("37 [ 42 swap ] call")
+deque([42, 37])
+
+# ... TODO ...
+
 >>> R.evaluate("swap", (1, 2, 3))
 deque([1, 3, 2])
+
+# ... TODO ...
+
 """
                                                                 # }}}1
 
@@ -332,7 +340,7 @@ def prim(name, effect):                                         # {{{1
 def evaluate(e, s = (), env = None):
   """Evaluate Factor' expression e with stack s and environment
   env."""
-  if isinstance(e, str)                   : e   = Word(e)
+  if isinstance(e, str)                   : e   = read(e)
   if not isinstance(s, collections.deque) : s   = collections.deque(s)
   if env is None                          : env = {}
   RULES[type(e)](e, s, env)
@@ -345,7 +353,7 @@ def rule_word(e, s, env):                                       # {{{1
     PRIMITIVES[e.value]["f"](s, env)
   elif e.value in env:
     s.append(Quot(env[e.value].terms))
-    evaluate("call", s, env)                                    # TODO
+    evaluate(Word("call"), s, env)                              # TODO
   else:
     raise UnknownNameError(e.value)
                                                                 # }}}1
@@ -375,6 +383,13 @@ def rule_prog(e, s, env):
 
 # ... TODO ...
 
+@prim("call", "callable --")
+def prim_call(s, env):
+  c = pop(s)
+  for term in c.terms: evaluate(term, s, env)
+
+# ... TODO ...
+
 @prim("swap", "x y -- y x")
 def prim_swap(s, env):
   x, y = pop(s, 2); push(s, y, x)
@@ -389,9 +404,12 @@ def pop(s, n = 1):                                              # {{{1
   >>> from collections import deque
   >>> s = deque((1, 2, 3)); x, y = R.pop(s, 2); x, y
   (2, 3)
+  >>> z = R.pop(s); z
+  1
   """
 
   if len(s) < n: raise StackUnderFlowError
+  if n == 1: return s.pop()
   return reversed([ s.pop() for i in xrange(n) ])
                                                                 # }}}1
 
