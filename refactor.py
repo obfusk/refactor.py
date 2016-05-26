@@ -28,10 +28,18 @@ Examples
 >>> R.evaluate("37 [ 42 swap ] call")
 deque([42, 37])
 
+>>> try: R.evaluate("37 call")
+... except R.Error as e: print(e)
+not a quotation
+
 # ... TODO ...
 
 >>> R.evaluate("swap", (1, 2, 3))
 deque([1, 3, 2])
+
+>>> try: R.evaluate("swap", ())
+... except R.StackUnderFlowError as e: print("underflow")
+underflow
 
 # ... TODO ...
 
@@ -383,9 +391,11 @@ def rule_prog(e, s, env):
 
 # ... TODO ...
 
+# TODO
 @prim("call", "callable --")
 def prim_call(s, env):
   c = pop(s)
+  if not isinstance(c, Quot): raise Error("not a quotation")
   for term in c.terms: evaluate(term, s, env)
 
 # ... TODO ...
